@@ -26,8 +26,6 @@
                 <h1 class="text-3xl font-bold mb-2">Teste Prático Growth</h1>
                 <div class="h-1 w-20 bg-blue-500 rounded"></div>
             </div>
-            
-            @if (Auth::user())
                 <nav class="flex items-center justify-end gap-4">
                     @auth
                         <a
@@ -45,7 +43,6 @@
                         </a>
                     @endauth
                 </nav>
-            @endif
         </header>
         
         <div class="w-full lg:max-w-4xl max-w-[335px] p-6 bg-white rounded-lg border border-gray-200 shadow-sm">

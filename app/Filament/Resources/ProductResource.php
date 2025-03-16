@@ -25,23 +25,22 @@ class ProductResource extends Resource
 
     public static function form(Form $form): Form
     {
+        //Tô puxando as regras de validações estabelecidas lá na model
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nome')
-                    ->required()
-                    ->maxLength(255),
+                    ->rules(Product::getValidationRules()['nome']),
                 Forms\Components\Textarea::make('descricao')
-                    ->required(),
+                    ->rules(Product::getValidationRules()['descricao']),
                 Forms\Components\TextInput::make('preco')
-                    ->required()
                     ->numeric()
-                    ->prefix('R$'),
+                    ->rules(Product::getValidationRules()['preco']),
                 Forms\Components\Select::make('status')
-                    ->required()
                     ->options([
                         Status::ATIVO->value => Status::ATIVO->getLabel(),
                         Status::INATIVO->value => Status::INATIVO->getLabel(),
-                    ]),
+                    ])
+                    ->rules(Product::getValidationRules()['status']),
             ]);
     }
 

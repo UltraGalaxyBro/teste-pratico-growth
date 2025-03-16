@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -39,6 +40,13 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+            ])
+            ->navigationItems([
+                NavigationItem::make('Voltar ao Site') //Só pro usuário retornar e ver o search isolado do Filament
+                    ->url('/')
+                    ->icon('heroicon-o-home')
+                    ->sort(100)
+                    ->group('Links Externos'),
             ])
             ->middleware([
                 EncryptCookies::class,
