@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 class ProductValidationTest extends TestCase
 {
     use RefreshDatabase;
-    //TESTE REQUIRED
+    //TESTE DO REQUIRED
     public function test_product_requires_name()
     {
         $data = [
