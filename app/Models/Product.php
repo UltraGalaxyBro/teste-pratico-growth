@@ -4,21 +4,15 @@ namespace App\Models;
 
 use App\Attributes\Validation;
 use App\Enums\Status;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\Rules\Enum;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
-    protected $fillable = [
-        'nome',
-        'descricao',
-        'preco',
-        'status'
-    ];
+    protected $fillable = ['nome', 'descricao', 'preco', 'status'];
 
     protected $casts = [
         'status' => Status::class,
@@ -26,17 +20,17 @@ class Product extends Model
     ];
 
     #[Validation(['required', 'string', 'max:255'])]
-    public $nome;
+    protected string $nome;
 
     #[Validation(['required', 'string'])]
-    public $descricao;
+    protected string $descricao;
 
     #[Validation(['required', 'numeric', 'min:0'])]
-    public $preco;
+    protected float $preco;
 
-    #[Validation(['required'])]
-    public $status;
-    
+    #[Validation(['required', new Enum(Status::class)])]
+    protected Status $status;
+
     public static function getValidationRules(): array
     {
         $rules = [];
@@ -45,13 +39,8 @@ class Product extends Model
         foreach ($reflection->getProperties() as $property) {
             $attributes = $property->getAttributes(Validation::class);
             
-            if (!empty($attributes)) {
-                $attribute = $attributes[0]->newInstance();
-                $rules[$property->getName()] = $attribute->rules;
-                
-                if ($property->getName() === 'status') {
-                    $rules[$property->getName()][] = new Enum(Status::class);
-                }
+            foreach ($attributes as $attribute) {
+                $rules[$property->getName()] = $attribute->getArguments()[0];
             }
         }
         

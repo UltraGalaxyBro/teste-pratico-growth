@@ -4,8 +4,8 @@ namespace App\Enums;
 
 enum Status: string
 {
-    case ATIVO = 'ativo';
-    case INATIVO = 'inativo';
+    case ATIVO = 'Ativo';
+    case INATIVO = 'Inativo';
 
     public function getLabel(): string
     {
