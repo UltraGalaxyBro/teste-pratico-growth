@@ -3,6 +3,8 @@
 namespace App\DTOs;
 
 use App\Enums\Status;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Enum;
 
 class ProductDTO
 {
@@ -15,6 +17,18 @@ class ProductDTO
 
     public static function fromArray(array $data): self
     {
+        // Validando os dados
+        $validator = Validator::make($data, [
+            'nome' => ['required', 'string', 'max:255'],
+            'descricao' => ['required', 'string'],
+            'preco' => ['required', 'numeric', 'min:0'],
+            'status' => ['required', new Enum(Status::class)],
+        ]);
+
+        if ($validator->fails()) {
+            throw new \InvalidArgumentException($validator->errors()->first());
+        }
+
         return new self(
             nome: $data['nome'],
             descricao: $data['descricao'],
@@ -29,7 +43,7 @@ class ProductDTO
             'nome' => $this->nome,
             'descricao' => $this->descricao,
             'preco' => $this->preco,
-            'status' => $this->status,
+            'status' => $this->status->value,
         ];
     }
 }

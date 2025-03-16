@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\ProductResource\Pages;
 
 use App\DTOs\ProductDTO;
-use App\Enums\Status;
 use App\Filament\Resources\ProductResource;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Validation\ValidationException;
 
 class CreateProduct extends CreateRecord
 {
@@ -13,13 +13,15 @@ class CreateProduct extends CreateRecord
     
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $dto = ProductDTO::fromArray([
-            'nome' => $data['nome'],
-            'descricao' => $data['descricao'],
-            'preco' => $data['preco'],
-            'status' => $data['status'],
-        ]);
-        
-        return $dto->toArray();
+        try {
+            $dto = ProductDTO::fromArray($data);
+            //Só para o Filament aproveitar
+            return $dto->toArray();
+        } catch (\InvalidArgumentException $e) {
+            throw ValidationException::withMessages([
+                'nome' => $e->getMessage(),
+
+            ]);
+        }
     }
 }
